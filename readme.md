@@ -1,11 +1,7 @@
 
-
-
-
-
 # Project Overview
 
-Kaggle recently hosted a competition using a time series dataset of page vistts to 145,063 articles on Wikipedia, with the competition titled [Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting). Kaggle provided the number of visits to each of those pages for 803 days (approximately 26 months) of daily history. The goal was to forecast the daily visits to those same pages for the next 60 days. The visits for each page of the next 60 days was not known at the time of the forecast, and was necessary to wait 60 days after the competition end to collect the observed values for the 60-day test data. Results were scored by SMAPE. Below is an example of one of these 145,063 time series.
+Kaggle hosted the [Web Traffic Time Series Forecasting](https://www.kaggle.com/c/web-traffic-time-series-forecasting) competition, which provides a time series dataset of page visits to 145,063 articles on Wikipedia. Kaggle provided the number of visits to each of those pages for 803 days (approximately 26 months) of daily history. The goal was to forecast the daily visits to those same pages for the next 60 days. The visits for each page of the next 60 days was not known at the time of the forecast, and was necessary to wait 60 days after the competition ended to collect the observed values for the 60-day test data. Results were scored by SMAPE. Below is an example of one of these 145,063 time series.
 
 
 
@@ -29,7 +25,7 @@ In addition to the 803 days worth of page views, each page is also tagged with t
 
 ## Missing Values
 
-There are also missing values in the dataset, which could be either true missings because of data issues or they could be zero observations. Missing values that appear as a contiguous block from the beginning from the series are assumed to be from pages where the history does not exist far enough back, and are referred to as "short series." Missing values that occur between valid values are referred to as "holes."
+There are missing values in the dataset, which could be either true missings because of data issues or they could be zero observations. Missing values that appear as a contiguous block from the beginning from the series are assumed to be from pages where the history does not exist far enough back, and are referred to as "short series." Missing values that occur between valid values are referred to as "holes."
 
 
 
@@ -49,25 +45,25 @@ Of the observations in the dataset, 2.0% are missing values that are holes and 4
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ratio_of_obs</th>
+      <th>Percent of Observations</th>
     </tr>
     <tr>
-      <th>missing_type</th>
+      <th>Missing Type</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>no_missing</th>
-      <td>0.939672</td>
+      <th>Not Missing</th>
+      <td>94</td>
     </tr>
     <tr>
-      <th>missing_short</th>
-      <td>0.040663</td>
+      <th>Beginning of Short Series</th>
+      <td>4</td>
     </tr>
     <tr>
-      <th>missing_hole</th>
-      <td>0.019665</td>
+      <th>Hole</th>
+      <td>2</td>
     </tr>
   </tbody>
 </table>
@@ -91,17 +87,21 @@ Of the time series in the dataset, 13.1% have at least one missing value that is
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ratio_of_ts</th>
+      <th>Percent of Time Series</th>
+    </tr>
+    <tr>
+      <th>Missing Type</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>missing_short</th>
-      <td>0.142972</td>
+      <th>Short Series</th>
+      <td>14</td>
     </tr>
     <tr>
-      <th>missing_hole</th>
-      <td>0.130764</td>
+      <th>Series with Holes</th>
+      <td>13</td>
     </tr>
   </tbody>
 </table>
@@ -109,7 +109,7 @@ Of the time series in the dataset, 13.1% have at least one missing value that is
 
 ## Seasonality
 
-The data likely has a seasonal pattern, as can be seen in the chart below when aggregated to an overall level, with more page views in general during the weekends. Will try to incorporate this into models.
+The data likely has a seasonal pattern, as can be seen in the chart below when aggregated to an overall level. There are more page views at the beginning and end of the week, and the modeling will attempt to incorporate this seasonaility.
 
 
 
@@ -119,7 +119,7 @@ The data likely has a seasonal pattern, as can be seen in the chart below when a
 
 ## View Distributions
 
-A fair number of time series have decent activity, with more than half having a median of 122 views per day, which may make fitting an ARIMA model worthwhile. For the those where there is as much activity, such as the 25% that have a median of 16 or less visits per day simple approaches such as means and medians or means and medians calculated off subsets may be beneficial.
+Much of the time series have modest daily visits, with more than half having a median of 122 or more views per day. For these series an ARIMA model may be worthwhile. For the those where there is not as much activity, such as the 25% that have a median of 16 or less visits per day, simple approaches such as means and medians may be useful.
 
 
 
@@ -134,23 +134,23 @@ A fair number of time series have decent activity, with more than half having a 
   <tbody>
     <tr>
       <th>min</th>
-      <td>0.0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>16.0</td>
+      <td>16</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>122.0</td>
+      <td>122</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>531.0</td>
+      <td>531</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>19440903.0</td>
+      <td>19440903</td>
     </tr>
   </tbody>
 </table>
@@ -168,7 +168,7 @@ Once hyperparameters are chosen, the model is fit with all 803 observations for 
 
 ### Data Cleaning
 
-**Outliers** were identified as observations that are more than two overall standard deviations from the 30-day center rolling average for that time seies. There were also **holes** in many of time series, where there is an NA value but valid observations before and after. It is unknown whether these NAs are data issues or if they are zero values, although zero values do appear in the data.
+**Outliers** were identified as observations that are more than two overall standard deviations from the 30-day center rolling average for that time series. There were also **holes** in many of time series, where there is an NA value but valid observations before and after. It is unknown whether these NAs are data issues or if they are zero values, although zero values do appear in the data.
 
 **Outliers and holes were cleaned by imputing** with the average of the prior day of week and following day of week. For example, if an outlier or hole was on a Wednesday, it would be imputed with the average value of the prior Wednesday and the following Wednesday. Imputing by the day of the week is done to preserve any weekly seasonality. If this was not possible because either those values were missing too, or if the outlier or hole occurs too close to the beginning or end of the series, then the outlier or hole was imputed with the rolling average.
 
@@ -184,13 +184,13 @@ The chart below shows the effect of cleaning up outliers for one time series.
 
 ### Holiday Adjustments
 
-A simple method to account for holidays was also applied. The effect of the holiday is removed before models are fit, and the effect is re-applied after the model forecast.
+A simple method was applied to account for holidays. The effect of the holiday is removed before models are fit, and the effect is re-applied after the model forecast.
 
-A short list of holidays that always fall on the same day were defined, along with the locales that they are associated with. Future enhancements could include holidays that may change days every year, for example, Labor Day which falls on the first Monday of September.
+A short list of holidays that always fall on the same day were defined, along with the locales that they are associated with. Future improvements could include holidays that may change days every year, for example, Labor Day which falls on the first Monday of September.
 
-For holidays in the list where all the occurences of that holiday in the time series are outliers, save the ratio between the cleaned figure to the untouched figure as the adjustment factor to apply for projection.
+For holidays in the list where all the occurences of that holiday in the time series are outliers, the ratio between the cleaned figure to the untouched figure is used as the adjustment factor to apply for projection.
 
-Below is an example of adjusting for the Halloween holiday. This adjust will be un-applied after a forecast is made.
+Below is an example of adjusting for Halloween. This adjustment will be un-applied after a forecast is made.
 
 
 
@@ -200,7 +200,7 @@ Below is an example of adjusting for the Halloween holiday. This adjust will be 
 
 ### Data Transformations by Page
 
-The clean and adjusted time series were then used to create four page-level data transformations for modeling. Models will be fit to each of these transformations.
+The cleaned and adjusted time series were then used to create four page-level data transformations for modeling. Models will be fit to each of these transformations.
 
 
 | Transformation                    | Description                             |
@@ -285,12 +285,12 @@ Of the series that were kept at the original daliy level, about half needed an a
       <th></th>
       <th></th>
       <th></th>
-      <th>num_ts</th>
+      <th>Number of Time Series</th>
     </tr>
     <tr>
-      <th>variable</th>
-      <th>found_stn</th>
-      <th>func</th>
+      <th>Variable</th>
+      <th>Found Stationary</th>
+      <th>Stationary Function</th>
       <th>d</th>
       <th>D</th>
       <th></th>
@@ -298,7 +298,7 @@ Of the series that were kept at the original daliy level, about half needed an a
   </thead>
   <tbody>
     <tr>
-      <th rowspan="4" valign="top">daily_level</th>
+      <th rowspan="4" valign="top">Daily Level</th>
       <th rowspan="4" valign="top">True</th>
       <th rowspan="4" valign="top">asis</th>
       <th rowspan="2" valign="top">0.0</th>
@@ -319,7 +319,7 @@ Of the series that were kept at the original daliy level, about half needed an a
       <td>61</td>
     </tr>
     <tr>
-      <th rowspan="2" valign="top">daily_wowGr</th>
+      <th rowspan="2" valign="top">Daily W-o-W Growth</th>
       <th rowspan="2" valign="top">True</th>
       <th rowspan="2" valign="top">asis</th>
       <th>0.0</th>
@@ -332,7 +332,7 @@ Of the series that were kept at the original daliy level, about half needed an a
       <td>7243</td>
     </tr>
     <tr>
-      <th rowspan="3" valign="top">weekly_level</th>
+      <th rowspan="3" valign="top">Weekly Level</th>
       <th rowspan="3" valign="top">True</th>
       <th rowspan="3" valign="top">asis</th>
       <th>0.0</th>
@@ -350,7 +350,7 @@ Of the series that were kept at the original daliy level, about half needed an a
       <td>38</td>
     </tr>
     <tr>
-      <th rowspan="2" valign="top">weekly_wowGr</th>
+      <th rowspan="2" valign="top">Weekly W-o-W Growth</th>
       <th rowspan="2" valign="top">True</th>
       <th rowspan="2" valign="top">asis</th>
       <th>0.0</th>
@@ -450,7 +450,9 @@ The chart on the left below shows the emphasis that would be given to each model
 
 
 
-![png](summary/Forecast_Wiki_Traffic_SummaryDetailed_files/Forecast_Wiki_Traffic_SummaryDetailed_59_0.png)
+
+
+![png](summary/Forecast_Wiki_Traffic_SummaryDetailed_files/Forecast_Wiki_Traffic_SummaryDetailed_60_0.png)
 
 
 After the end of the competition and waiting 60 days for the testing sample to be collected, the performance between using the most with the lowest SMAPE versus using the ensemble methodology can be compared. As seen in the chart below, **using the ensemble model that blends the top five models weighted by inverse error results in a model with better SMAPE on the testing sample than using just the top model determined on the validation sample**.
@@ -462,21 +464,17 @@ After the end of the competition and waiting 60 days for the testing sample to b
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>smape</th>
-    </tr>
-    <tr>
-      <th>model</th>
-      <th></th>
+      <th>SMAPE</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>postValiMod_ens_ranked1</th>
-      <td>49.533987</td>
+      <th>Top Model</th>
+      <td>49.53</td>
     </tr>
     <tr>
-      <th>postValiMod_ens_ranked5</th>
-      <td>48.301597</td>
+      <th>Ensemble of Top Five Models</th>
+      <td>48.30</td>
     </tr>
   </tbody>
 </table>
@@ -493,7 +491,7 @@ The two charts below show an example for one time series, which is the article f
 
 
 
-![png](summary/Forecast_Wiki_Traffic_SummaryDetailed_files/Forecast_Wiki_Traffic_SummaryDetailed_66_0.png)
+![png](summary/Forecast_Wiki_Traffic_SummaryDetailed_files/Forecast_Wiki_Traffic_SummaryDetailed_67_0.png)
 
 
 # Computational Framework and Infrastructure
@@ -521,7 +519,7 @@ Forecasts from this model for the next 60 days for each 145,063 time series were
 
 
 
-![png](summary/Forecast_Wiki_Traffic_SummaryDetailed_files/Forecast_Wiki_Traffic_SummaryDetailed_72_0.png)
+![png](summary/Forecast_Wiki_Traffic_SummaryDetailed_files/Forecast_Wiki_Traffic_SummaryDetailed_73_0.png)
 
 
 
