@@ -1,8 +1,9 @@
 import os
 
 # set paths and initial steps
-file_in = "/media/disk1/forecast_wiki_traffic/summary/Forecast_Wiki_Traffic_SummaryDetailed.md"
-file_out = "/media/disk1/forecast_wiki_traffic/readme.md"
+root_path = "C:/Users/Bertram/Dropbox/forecast_wiki_traffic"
+file_in = root_path + "/summary/Forecast_Wiki_Traffic_SummaryDetailed.md"
+file_out = root_path + "/readme.md"
 
 ## convert Jupyter summary notebook to Markdown
 os.system("jupyter nbconvert --to markdown Forecast_Wiki_Traffic_SummaryDetailed.ipynb")
