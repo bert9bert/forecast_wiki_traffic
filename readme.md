@@ -47,10 +47,6 @@ Of the observations in the dataset, 2.0% are missing values that are holes and 4
       <th></th>
       <th>Percent of Observations</th>
     </tr>
-    <tr>
-      <th>Missing Type</th>
-      <th></th>
-    </tr>
   </thead>
   <tbody>
     <tr>
@@ -88,10 +84,6 @@ Of the time series in the dataset, 13.1% have at least one missing value that is
     <tr style="text-align: right;">
       <th></th>
       <th>Percent of Time Series</th>
-    </tr>
-    <tr>
-      <th>Missing Type</th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
